@@ -81,9 +81,12 @@ if faq_df is not None:
                 
                 # Extract values from the matched row
                 sql_query = row.get('SQL Query', '')
-                dataframe_path = os.path.join(BASE_PATH, str(row.get('Insights Dataframe', '')).replace('"', ''))
+                os.path.join(BASE_PATH, "faq_streamlit_genai", "faq_sheet.csv")
+                df_path = str(row.get('Insights Dataframe', '')).replace('"', '').split("\")[-1]
+                plt_path = str(row.get('Plot', '')).replace('"', '').split("\")[-1]
+                dataframe_path = os.path.join(BASE_PATH, "faq_streamlit_genai", "insights_data", df_path)
                 insights = row.get('Response', 'No insights available.')
-                plot_path = os.path.join(BASE_PATH, str(row.get('Plot', '')).replace('"', ''))
+                plot_path = os.path.join(BASE_PATH,  "faq_streamlit_genai", "plots", plt_path)
 
                 with st.spinner("Generating insights..."):
                     time.sleep(1)
