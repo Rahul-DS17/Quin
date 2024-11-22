@@ -1,0 +1,53 @@
+﻿User Query,SQL Query,Insights Dataframe,Response,Plot
+How many players are there who played 2 hours or more in total?,"SELECT COUNT(DISTINCT ""user_id"") AS ""Number of Players""
+FROM (
+    SELECT ""user_id"", SUM(""hours"") AS ""total_hours""
+    FROM daily_active_user_table
+    GROUP BY ""user_id""
+) AS user_hours
+WHERE ""total_hours"" >= 2;","""faq_streamlit_genai\insights_data\hours_played_ques1.csv""","All 9 players in the dataset meet the criteria of having played more than 2 hours in total.
+",
+What is the MAU (Monthly Active Users) for 2024 for all months,"SELECT 
+    FORMAT(""date"", 'yyyy-MM') AS ""Month"",
+    COUNT(DISTINCT ""user_id"") AS ""Monthly Active Users""
+FROM 
+    daily_active_user_table
+WHERE 
+    YEAR(""date"") = 2024
+GROUP BY 
+    FORMAT(""date"", 'yyyy-MM')
+ORDER BY 
+    ""Month"";","""faq_streamlit_genai\insights_data\mau_for_20244_ques2.csv""","The Monthly Active Users (MAU) data for 2024 provides insights into user engagement trends over the first nine months of the year. Here are the key insights:
+
+January 2024: The year begins with 5 active users, setting a baseline for the subsequent months.
+February 2024: There is a slight increase to 6 active users, indicating a potential growth in user engagement or retention efforts.
+March 2024: The number of active users returns to 5, suggesting a stabilization or fluctuation around this number.
+April 2024: Another increase to 6 active users is observed, which could be attributed to seasonal factors or successful user acquisition strategies.
+May 2024: The active users drop back to 5, continuing the pattern of alternating between 5 and 6 users.
+June 2024: The trend remains consistent with 5 active users, indicating a possible plateau in user engagement.
+July 2024: The number of active users rises again to 6, which might be due to mid-year promotions or updates in the gaming content.
+August 2024: A notable decrease to 4 active users occurs, which could be due to external factors such as summer holidays or competitive market dynamics.
+September 2024: The active users rebound to 6, suggesting a recovery or successful re-engagement strategies.
+Overall, the MAU data for 2024 shows a pattern of fluctuation between 5 and 6 users, with a temporary dip in August. This pattern could be influenced by various factors such as marketing campaigns, seasonal trends, or changes in user preferences. Understanding these dynamics can help in strategizing for consistent user growth and engagement.","""faq_streamlit_genai\plots\monthly_active_users_ques2.png"""
+Calculate ARPU (Average Revenue Per User) for all games?,"SELECT 
+    g.""game_name"" AS ""Game Name"",
+    SUM(d.""usd"") / NULLIF(COUNT(DISTINCT d.""user_id""), 0) AS ""ARPU""
+FROM 
+    daily_active_user_table d
+JOIN 
+    game_table g ON d.""game_id"" = g.""game_id""
+GROUP BY 
+    g.""game_name""
+ORDER BY 
+    ""ARPU"" DESC;","""faq_streamlit_genai\insights_data\arpu_ques3.csv""","The Average Revenue Per User (ARPU) is a critical metric in the gaming industry, reflecting the average revenue generated per user for a specific game. It is calculated by dividing the total revenue by the number of active users over a given period. Based on the provided data, we can derive the following insights:
+
+Game C has the highest ARPU at $64.68, indicating that it generates the most revenue per user compared to other games. This could be due to a higher spending pattern among its users, possibly driven by premium content or effective monetization strategies.
+
+Game A follows with an ARPU of $19.58. This suggests a moderate level of user spending, which might be attributed to a balanced mix of free and paid content that encourages user engagement and spending.
+
+Game B has an ARPU of $18.53, slightly lower than Game A. This could imply a similar monetization approach but with slightly less user engagement or spending.
+
+Game D has the lowest ARPU at $13.99, which might indicate a larger user base with lower individual spending or a focus on free-to-play models with limited monetization.
+
+These insights suggest that Game C is the most successful in terms of revenue generation per user, possibly due to effective monetization strategies or a more engaged user base willing to spend more. Understanding these dynamics can help in strategizing marketing efforts, content development, and monetization models to optimize revenue across different games.","""faq_streamlit_genai\plots\arpu_ques3.png"""
+,,,,
