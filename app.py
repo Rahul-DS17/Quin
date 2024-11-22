@@ -6,7 +6,7 @@ import os
 import time
 
 # Constants
-BASE_PATH = r"C:\Users\rahul\Desktop\Extra"
+BASE_PATH = os.getcwd()
 FAQ_FILE = os.path.join(BASE_PATH, "faq_streamlit_genai", "faq_sheet.csv")
 LOGO_PATH = os.path.join(BASE_PATH, "wb_logo.jpg")
 
