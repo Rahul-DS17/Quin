@@ -41,6 +41,12 @@ def load_dataframe(file_path):
         st.error(f"Error loading dataframe: {e}")
         return None
 
+# Initialize Session State
+if "sql_query" not in st.session_state:
+    st.session_state.sql_query = ""
+if "plot_path" not in st.session_state:
+    st.session_state.plot_path = None
+
 # Streamlit UI Setup
 st.markdown(
     "<h1 style='color:Blue; text-align:center;'>Quick Insights on Gaming Data</h1>",
@@ -80,13 +86,12 @@ if faq_df is not None:
                 row = matched_rows.iloc[0]
                 
                 # Extract values from the matched row
-                sql_query = row.get('SQL Query', '')
-                os.path.join(BASE_PATH, "faq_streamlit_genai", "faq_sheet.csv")
+                st.session_state.sql_query = row.get('SQL Query', '')
                 df_path = str(row.get('Insights Dataframe', '')).replace('"', '').split("\\")[-1]
                 plt_path = str(row.get('Plot', '')).replace('"', '').split("\\")[-1]
                 dataframe_path = os.path.join(BASE_PATH, "faq_streamlit_genai", "insights_data", df_path)
                 insights = row.get('Response', 'No insights available.')
-                plot_path = os.path.join(BASE_PATH,  "faq_streamlit_genai", "plots", plt_path)
+                st.session_state.plot_path = os.path.join(BASE_PATH,  "faq_streamlit_genai", "plots", plt_path)
 
                 with st.spinner("Generating insights..."):
                     time.sleep(1)
@@ -106,13 +111,13 @@ if faq_df is not None:
                 # Buttons for SQL Query and Plot
                 if st.button("Show SQL Query"):
                     st.subheader("SQL Query")
-                    st.code(sql_query if sql_query else "No SQL query available.")
+                    st.code(st.session_state.sql_query if st.session_state.sql_query else "No SQL query available.")
                 
                 if st.button("Generate Plot"):
                     st.subheader("Visualization")
-                    plot_image = add_plot(plot_path)
+                    plot_image = add_plot(st.session_state.plot_path)
                     if plot_image:
-                        st.image(plot_path, caption="Visualization", use_column_width=True)
+                        st.image(st.session_state.plot_path, caption="Visualization", use_column_width=True)
                     else:
                         st.warning("No visualization available.")
             else:
