@@ -8,7 +8,7 @@ import time
 # Constants
 BASE_PATH = os.getcwd()
 FAQ_FILE = os.path.join(BASE_PATH, "faq_streamlit_genai", "faq_sheet.csv")
-LOGO_PATH = os.path.join(BASE_PATH, "wb_logo.jpg")
+LOGO_PATH = os.path.join(BASE_PATH, "Warner_Bros._Games_logo_(December_2023).svg.png")
 
 
 # Functions
@@ -49,7 +49,7 @@ st.markdown(
 )
 
 # Add Sidebar Logo
-my_logo = add_logo(logo_path=LOGO_PATH, width=200, height=80)
+my_logo = add_logo(logo_path=LOGO_PATH, width=200, height=200)
 if my_logo:
     st.sidebar.image(my_logo)
 
@@ -64,7 +64,7 @@ faq_df = load_dataframe(FAQ_FILE)
 
 if faq_df is not None:
     # User Input for Query
-    query = st.text_input("Enter your query (e.g., Calculate ARPU for all games):")
+    query = st.text_input("Enter your query (e.g., What is the MAU (Monthly Active Users) for 2024):")
 
     # Handle Query
     if query:
@@ -103,6 +103,7 @@ if faq_df is not None:
                 # Display Insights
                 st.subheader("Insights")
                 st.markdown(insights)
+                st.markdown("**\*Data Source:** Sample data", unsafe_allow_html=True)  # Footer note
 
                 # Buttons for SQL Query and Plot
                 if st.button("Show SQL Query"):
@@ -114,6 +115,7 @@ if faq_df is not None:
                     plot_image = add_plot(st.session_state.plot_path)
                     if plot_image:
                         st.image(st.session_state.plot_path, caption="Visualization", use_column_width=True)
+                        st.markdown("**\*Data Source:** Sample data", unsafe_allow_html=True)  # Footer note
                     else:
                         st.warning("No visualization available.")
             else:
