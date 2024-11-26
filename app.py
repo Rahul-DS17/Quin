@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 from PIL import Image
-from libraries import gen_prompt, formatting
 import re
 import os
 import time
@@ -133,7 +132,7 @@ if faq_df is not None:
                 st.error("No matching query found. Please try a different query.")
         except Exception as e:
             st.error(f"An error occurred: {e}")
-    else:
-        st.info("Please enter a query to get insights.")
+    # else:
+    #     st.info("Please enter a query to get insights.")
 else:
     st.error("Failed to load the FAQ dataset. Please check the file path.")
