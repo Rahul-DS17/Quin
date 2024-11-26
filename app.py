@@ -103,7 +103,7 @@ if faq_df is not None:
                 # Display Insights
                 st.subheader("Insights")
                 st.markdown(insights)
-                # st.markdown("**\*Data Source:** Sample data", unsafe_allow_html=True)  # Footer note
+                st.markdown("**\*Data Source:** Sample data", unsafe_allow_html=True)  # Footer note
 
                 # Buttons for SQL Query and Plot
                 if st.button("Show SQL Query"):
@@ -115,7 +115,7 @@ if faq_df is not None:
                     plot_image = add_plot(st.session_state.plot_path)
                     if plot_image:
                         st.image(st.session_state.plot_path, caption="Visualization", use_column_width=True)
-                        st.markdown("**\*Data Source:** Sample data", unsafe_allow_html=True)  # Footer note
+                        # st.markdown("**\*Data Source:** Sample data", unsafe_allow_html=True)  # Footer note
                     else:
                         st.warning("No visualization available.")
             else:
