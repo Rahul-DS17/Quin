@@ -6,7 +6,7 @@ import os
 import time
 
 # Constants
-BASE_PATH = r"C:\Users\rahul\Desktop\Extra"
+BASE_PATH = os.getcwd()
 FAQ_FILE = os.path.join(BASE_PATH, "faq_streamlit_genai", "faq_sheet.csv")
 LOGO_PATH = os.path.join(BASE_PATH, "wb_logo.jpg")
 
@@ -81,22 +81,15 @@ if faq_df is not None:
                 row = matched_rows.iloc[0]
                 
                 # Extract values from the matched row
-                sql_query = row.get('SQL Query', '')
-                dataframe_path = os.path.join(BASE_PATH, str(row.get('Insights Dataframe', '')).replace('"', ''))
+                st.session_state.sql_query = row.get('SQL Query', '')
+                df_path = str(row.get('Insights Dataframe', '')).replace('"', '').split("\\")[-1]
+                plt_path = str(row.get('Modified Plot', '')).replace('"', '').split("\\")[-1]
+                dataframe_path = os.path.join(BASE_PATH, "faq_streamlit_genai", "insights_data", df_path)
                 insights = row.get('Modified Response', 'No insights available.')
-                plot_path = os.path.join(BASE_PATH, str(row.get('Modified Plot', '')).replace('"', ''))
+                st.session_state.plot_path = os.path.join(BASE_PATH,  "faq_streamlit_genai", "plots", plt_path)
                 plots = []
                 plots.append(plot_path)
                 with st.spinner("Generating insights..."):
-                #     inference = formatting(
-                #     azure_endpoint=azure_endpoint, 
-                #     api_key=api_key, 
-                #     deployment=deployment, 
-                #     prompt=gen_prompt(query=query, response=insights)
-                # )
-
-                # # Pass the uploaded image file-like object to predict
-                # inf = inference.predict(image_files=plots)
                     time.sleep(1)
                     
                 
