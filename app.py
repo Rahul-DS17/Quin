@@ -103,7 +103,7 @@ if faq_df is not None:
                 # Display Insights
                 st.subheader("Insights")
                 st.markdown(insights)
-                st.markdown("**\*Data Source:** Sample data", unsafe_allow_html=True)  # Footer note
+                # st.markdown("**\*Data Source:** Sample data", unsafe_allow_html=True)  # Footer note
 
                 # Buttons for SQL Query and Plot
                 if st.button("Show SQL Query"):
