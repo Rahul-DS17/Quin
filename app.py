@@ -1,14 +1,20 @@
 import streamlit as st
 import pandas as pd
 from PIL import Image
+from libraries import gen_prompt, formatting
 import re
 import os
 import time
 
 # Constants
-BASE_PATH = os.getcwd()
+BASE_PATH = r"C:\Users\rahul\Desktop\Extra"
 FAQ_FILE = os.path.join(BASE_PATH, "faq_streamlit_genai", "faq_sheet.csv")
 LOGO_PATH = os.path.join(BASE_PATH, "wb_logo.jpg")
+
+# Load environment variables from .toml file
+azure_endpoint = st.secrets["AZURE_OPENAI_ENDPOINT"]
+deployment = st.secrets["AZURE_OPENAI_CHATGPT_DEPLOYMENT"]                           
+api_key = st.secrets["AZURE_OPENAI_KEY"]
 
 # Functions
 def add_logo(logo_path, width, height):
@@ -33,19 +39,13 @@ def add_plot(plot_path):
 def load_dataframe(file_path):
     """Load a dataframe from a CSV file."""
     try:
-        return pd.read_csv(file_path)
+        return pd.read_csv(file_path, encoding='latin1')
     except FileNotFoundError:
         st.error(f"Dataframe file not found at {file_path}.")
         return None
     except Exception as e:
         st.error(f"Error loading dataframe: {e}")
         return None
-
-# Initialize Session State
-if "sql_query" not in st.session_state:
-    st.session_state.sql_query = ""
-if "plot_path" not in st.session_state:
-    st.session_state.plot_path = None
 
 # Streamlit UI Setup
 st.markdown(
@@ -86,15 +86,24 @@ if faq_df is not None:
                 row = matched_rows.iloc[0]
                 
                 # Extract values from the matched row
-                st.session_state.sql_query = row.get('SQL Query', '')
-                df_path = str(row.get('Insights Dataframe', '')).replace('"', '').split("\\")[-1]
-                plt_path = str(row.get('Plot', '')).replace('"', '').split("\\")[-1]
-                dataframe_path = os.path.join(BASE_PATH, "faq_streamlit_genai", "insights_data", df_path)
-                insights = row.get('Response', 'No insights available.')
-                st.session_state.plot_path = os.path.join(BASE_PATH,  "faq_streamlit_genai", "plots", plt_path)
-
+                sql_query = row.get('SQL Query', '')
+                dataframe_path = os.path.join(BASE_PATH, str(row.get('Insights Dataframe', '')).replace('"', ''))
+                insights = row.get('Modified Response', 'No insights available.')
+                plot_path = os.path.join(BASE_PATH, str(row.get('Modified Plot', '')).replace('"', ''))
+                plots = []
+                plots.append(plot_path)
                 with st.spinner("Generating insights..."):
+                #     inference = formatting(
+                #     azure_endpoint=azure_endpoint, 
+                #     api_key=api_key, 
+                #     deployment=deployment, 
+                #     prompt=gen_prompt(query=query, response=insights)
+                # )
+
+                # # Pass the uploaded image file-like object to predict
+                # inf = inference.predict(image_files=plots)
                     time.sleep(1)
+                    
                 
                 # Display DataFrame
                 st.subheader("Dataframe")
@@ -111,13 +120,13 @@ if faq_df is not None:
                 # Buttons for SQL Query and Plot
                 if st.button("Show SQL Query"):
                     st.subheader("SQL Query")
-                    st.code(st.session_state.sql_query if st.session_state.sql_query else "No SQL query available.")
+                    st.code(sql_query if sql_query else "No SQL query available.")
                 
                 if st.button("Generate Plot"):
                     st.subheader("Visualization")
-                    plot_image = add_plot(st.session_state.plot_path)
+                    plot_image = add_plot(plot_path)
                     if plot_image:
-                        st.image(st.session_state.plot_path, caption="Visualization", use_column_width=True)
+                        st.image(plot_path, caption="Visualization", use_column_width=True)
                     else:
                         st.warning("No visualization available.")
             else:
