@@ -10,10 +10,6 @@ BASE_PATH = r"C:\Users\rahul\Desktop\Extra"
 FAQ_FILE = os.path.join(BASE_PATH, "faq_streamlit_genai", "faq_sheet.csv")
 LOGO_PATH = os.path.join(BASE_PATH, "wb_logo.jpg")
 
-# Load environment variables from .toml file
-azure_endpoint = st.secrets["AZURE_OPENAI_ENDPOINT"]
-deployment = st.secrets["AZURE_OPENAI_CHATGPT_DEPLOYMENT"]                           
-api_key = st.secrets["AZURE_OPENAI_KEY"]
 
 # Functions
 def add_logo(logo_path, width, height):
